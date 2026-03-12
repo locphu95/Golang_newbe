@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend-core
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: backend-core
+  template:
+    metadata:
+      labels:
+        app: backend-core
+    spec:
+      containers:
+        - name: backend-core
+          image: your-docker/backend:latest
+          ports:
+            - containerPort: 8443
+            - containerPort: 50051
+          envFrom:
+            - configMapRef:
+                name: backend-core-config
+            - secretRef:
+                name: backend-core-secret
