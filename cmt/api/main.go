@@ -37,7 +37,7 @@ func main() {
 	r.Use(transporthttp.Logger)
 	r.Use(transporthttp.Recovery)
 	// ===== Dependency Injection =====
-	repo := &repository.UserReponsitoryImpl{}
+	repo := &repository.UserRepositoryImpl{}
 	svc := service.NewUserService(repo)
 
 	handlerV1 := &v1handler.UserHandler{Service: svc}

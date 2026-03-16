@@ -6,9 +6,9 @@ import (
 	"github.com/locphu95/smart_machine/backend-core/internal/domain"
 )
 
-type UserReponsitoryImpl struct{}
+type UserRepositoryImpl struct{}
 
-func (r *UserReponsitoryImpl) GetUser(ctx context.Context,
+func (r *UserRepositoryImpl) GetUser(ctx context.Context,
 	id string) *domain.User {
 	if id == "1" {
 		return &domain.User{
@@ -19,7 +19,7 @@ func (r *UserReponsitoryImpl) GetUser(ctx context.Context,
 	return nil
 }
 
-func (r *UserReponsitoryImpl) GetUserV2(ctx context.Context,
+func (r *UserRepositoryImpl) GetUserV2(ctx context.Context,
 	id string) *domain.User {
 	if id == "1" {
 		return &domain.User{
@@ -30,7 +30,7 @@ func (r *UserReponsitoryImpl) GetUserV2(ctx context.Context,
 	return nil
 }
 
-func (r *UserReponsitoryImpl) Find(
+func (r *UserRepositoryImpl) Find(
 	id string) *domain.User {
 	if id == "1" {
 		return &domain.User{
