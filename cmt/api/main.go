@@ -8,6 +8,7 @@ import (
 
 	v2handler "github.com/locphu95/smart_machine/backend-core/internal/handler/v1.1/user"
 	v1handler "github.com/locphu95/smart_machine/backend-core/internal/handler/v1/user"
+	"github.com/locphu95/smart_machine/backend-core/pkg/config"
 
 	"github.com/locphu95/smart_machine/backend-core/internal/repository"
 	"github.com/locphu95/smart_machine/backend-core/internal/service"
@@ -15,7 +16,7 @@ import (
 )
 
 func main() {
-
+	config.Load()
 	r := chi.NewRouter()
 
 	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
