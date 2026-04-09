@@ -1,12 +1,33 @@
 package redis
 
 import (
-	"github.com/locphu95/smart_machine/backend-core/pkg/config"
+	"context"
+
 	"github.com/redis/go-redis/v9"
 )
 
-func NewRedis(cfg *config.Config) *redis.Client {
-	return redis.NewClient(&redis.Options{
-		Addr: cfg.RedisHost + ":" + cfg.RedisPort,
+type Redis struct {
+	Addr     string
+	Password string
+	Client   *redis.Client
+}
+
+func NewRedis(addr, password string) *Redis {
+	return &Redis{Addr: addr, Password: password}
+}
+
+func (r *Redis) Connect() error {
+	r.Client = redis.NewClient(&redis.Options{
+		Addr:     r.Addr,
+		Password: r.Password,
+		DB:       0,
 	})
+	return r.Client.Ping(context.Background()).Err()
+}
+
+func (r *Redis) Close() error {
+	if r.Client != nil {
+		return r.Client.Close()
+	}
+	return nil
 }

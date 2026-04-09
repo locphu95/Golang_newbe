@@ -1,0 +1,11 @@
+docker run --name go-postgres \
+  -e POSTGRES_USER=go_user \
+  -e POSTGRES_PASSWORD=go_pass \
+  -e POSTGRES_DB=go_db \
+  -p 5432:5432 \
+  -d postgres:15
+
+
+docker run --name go-redis \
+  -p 6379:6379 \
+  -d redis:7

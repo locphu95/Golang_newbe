@@ -2,17 +2,33 @@ package main
 
 import (
 	"log"
-	"net/http"
 
 	"github.com/go-chi/chi/v5"
 	transporthttp "github.com/locphu95/smart_machine/backend-core/internal/transport/http/middleware"
 	routers "github.com/locphu95/smart_machine/backend-core/internal/transport/http/routers"
 	"github.com/locphu95/smart_machine/backend-core/pkg/config"
+	db "github.com/locphu95/smart_machine/backend-core/pkg/database"
+	"github.com/locphu95/smart_machine/backend-core/pkg/redis"
+	"github.com/locphu95/smart_machine/backend-core/pkg/server"
 )
 
 func main() {
 	// 1. Load config
 	cfg := config.Load()
+
+	// Init Postgres
+	pg := db.NewPostgres(cfg.PostgresConn)
+	if err := pg.Connect(); err != nil {
+		log.Fatalf("Postgres connect error: %v", err)
+	}
+	defer pg.Close()
+
+	// Init Redis
+	redis := redis.NewRedis(cfg.RedisHost, cfg.RedisPort)
+	if err := redis.Connect(); err != nil {
+		log.Fatalf("Redis connect error: %v", err)
+	}
+	defer redis.Close()
 
 	// 2. Init router
 	log.Printf("-->>> load router <<<--")
@@ -23,18 +39,6 @@ func main() {
 	// 3. Register routes
 	routers.RegisterRoutes(r)
 
-	/* Newbee
-	svc := &service.UserService{}
-	handler := &handler.UserHandler{Service: svc}
-	http.HandleFunc("/user", handler.GetUser)
-
-	repo := &repository.UserReponsitoryImpl{}
-	svc2 := service.NewUserService(repo)
-	handler2 := &handler.UserHandler{Service: svc2}
-	http.HandleFunc("/user2", handler2.GetUser)
-	*/
-	// add logger
-
 	// 4. Start server
 	log.Printf("-->>> start server <<<--")
 
@@ -42,9 +46,9 @@ func main() {
 	if cfg.AppPort != "" {
 		addr = ":" + cfg.AppPort
 	}
-
+	s := server.New(addr, r)
 	log.Printf("Server running at %s\n", addr)
-	if err := http.ListenAndServe(addr, r); err != nil {
+	if err := s.Start(); err != nil {
 		log.Fatalf("could not start server: %v", err)
 	}
 }
