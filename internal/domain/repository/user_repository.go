@@ -11,4 +11,5 @@ type UserReponsitory interface {
 	GetUserV2(ctx context.Context, id string) *domain.User
 	//Find(id string) *domain.User
 	Find(id string) *domain.User
+	CreateUser(ctx context.Context, user domain.User) *domain.User
 }

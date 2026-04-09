@@ -26,7 +26,8 @@ func Execute(h AppHandler) http.HandlerFunc {
 
 		// ===== success response =====
 		writeJSON(w, resp)
+		reqID, _ := r.Context().Value(RequestIDKey).(string)
 
-		log.Printf("done %s in %v", r.URL.Path, time.Since(start))
+		log.Printf("[%s] Request %s in %v", reqID, r.URL.Path, time.Since(start))
 	}
 }

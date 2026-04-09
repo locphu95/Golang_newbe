@@ -13,7 +13,7 @@ func (r *UserRepositoryImpl) GetUser(ctx context.Context,
 	if id == "1" {
 		return &domain.User{
 			ID:   "1",
-			Name: "Phu Loc V2",
+			Name: "Phu Loc V1",
 		}
 	}
 	return nil
@@ -21,7 +21,7 @@ func (r *UserRepositoryImpl) GetUser(ctx context.Context,
 
 func (r *UserRepositoryImpl) GetUserV2(ctx context.Context,
 	id string) *domain.User {
-	if id == "1" {
+	if id == "2" {
 		return &domain.User{
 			ID:   "1",
 			Name: "Phu Loc V2",
@@ -38,5 +38,9 @@ func (r *UserRepositoryImpl) Find(
 			Name: "Phu Loc V2",
 		}
 	}
+	return nil
+}
+func (s *UserRepositoryImpl) CreateUser(ctx context.Context,
+	user domain.User) *domain.User {
 	return nil
 }

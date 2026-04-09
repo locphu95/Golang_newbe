@@ -6,11 +6,15 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/locphu95/smart_machine/backend-core/internal/domain"
-	"github.com/locphu95/smart_machine/backend-core/internal/service"
+	service "github.com/locphu95/smart_machine/backend-core/internal/services"
 )
 
 type UserHandler struct {
 	Service *service.UserService
+}
+
+func NewUserHandler() *UserHandler {
+	return &UserHandler{}
 }
 
 func (h *UserHandler) GetUserV2(ctx context.Context,

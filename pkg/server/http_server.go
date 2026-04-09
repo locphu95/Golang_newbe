@@ -1,18 +1,21 @@
 package server
 
-import (
-	"net/http"
-	"os"
-)
+import "net/http"
 
-func StartHTTP(handler http.Handler) error {
-	srv := &http.Server{
-		Addr:    ":8443",
-		Handler: handler,
+type Server struct {
+	httpServer *http.Server
+}
+
+func New(addr string, handler http.Handler) *Server {
+
+	return &Server{
+		httpServer: &http.Server{
+			Addr:    addr,
+			Handler: handler,
+		},
 	}
+}
 
-	return srv.ListenAndServeTLS(
-		os.Getenv("TLS_CERT"),
-		os.Getenv("TLS_KEY"),
-	)
+func (s *Server) Start() error {
+	return s.httpServer.ListenAndServe()
 }

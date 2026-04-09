@@ -39,3 +39,15 @@ func (s *UserService) GetUserV2(ctx context.Context,
 
 	return *user, nil
 }
+
+func (s *UserService) CreateUser(ctx context.Context,
+	user domain.User) (domain.User, error) {
+
+	_user := s.repo.CreateUser(ctx, user)
+
+	if _user == nil {
+		return domain.User{}, domain.ErrUserNotFound
+	}
+
+	return *_user, nil
+}
