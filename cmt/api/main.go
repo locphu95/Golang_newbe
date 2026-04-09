@@ -1,6 +1,7 @@
 package main
 
 import (
+	"database/sql"
 	"log"
 
 	"github.com/go-chi/chi/v5"
@@ -17,16 +18,30 @@ func main() {
 	cfg := config.Load()
 
 	// Init Postgres
+	log.Printf("-->>> start init database <<<--")
 	pg := db.NewPostgres(cfg.PostgresConn)
 	if err := pg.Connect(); err != nil {
 		log.Fatalf("Postgres connect error: %v", err)
+	} else {
+		log.Println("Connected to Postgres OK")
+
+	}
+	db, err := sql.Open("postgres", cfg.PostgresConn)
+	if err != nil {
+		log.Fatalf("Open error: %v", err)
+	}
+	if err := db.Ping(); err != nil {
+		log.Fatalf("Ping error: %v", err)
 	}
 	defer pg.Close()
 
 	// Init Redis
-	redis := redis.NewRedis(cfg.RedisHost, cfg.RedisPort)
+	log.Printf("-->>> start init Redis <<<--")
+	redis := redis.NewRedis(cfg.RedisHost+":"+cfg.RedisPort, cfg.RedisPort)
 	if err := redis.Connect(); err != nil {
 		log.Fatalf("Redis connect error: %v", err)
+	} else {
+		log.Println("Connected to Redis OK")
 	}
 	defer redis.Close()
 
