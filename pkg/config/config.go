@@ -29,7 +29,7 @@ func Load() *Config {
 	pgPort := os.Getenv("POSTGRES_PORT")
 
 	pgConn := "postgres://" + pgUser + ":" + pgPass + "@" + pgHost + ":" + pgPort + "/" + pgDB + "?sslmode=disable"
-	log.Fatalf("connect %v", pgConn)
+	log.Println("connect %s", pgConn)
 	return &Config{
 		AppPort:      os.Getenv("APP_PORT"),
 		RedisHost:    os.Getenv("REDIS_HOST"),
