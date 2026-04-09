@@ -5,22 +5,23 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/locphu95/smart_machine/backend-core/cmt/routes"
-	transporthttp "github.com/locphu95/smart_machine/backend-core/internal/transport/middleware/http"
+	transporthttp "github.com/locphu95/smart_machine/backend-core/internal/transport/http/middleware"
+	routers "github.com/locphu95/smart_machine/backend-core/internal/transport/http/routers"
 	"github.com/locphu95/smart_machine/backend-core/pkg/config"
 )
 
 func main() {
-	config.Load()
-	r := chi.NewRouter()
+	// 1. Load config
+	cfg := config.Load()
 
-	http.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("OKE"))
-	})
+	// 2. Init router
+	log.Printf("-->>> load router <<<--")
+	r := chi.NewRouter()
 	r.Use(transporthttp.RequestID)
 	r.Use(transporthttp.Logger)
 	r.Use(transporthttp.Recovery)
-	routes.UserRouters(r)
+	// 3. Register routes
+	routers.RegisterRoutes(r)
 
 	/* Newbee
 	svc := &service.UserService{}
@@ -34,6 +35,16 @@ func main() {
 	*/
 	// add logger
 
-	log.Println("server running at :8080")
-	http.ListenAndServe(":8080", r)
+	// 4. Start server
+	log.Printf("-->>> start server <<<--")
+
+	addr := ":8080"
+	if cfg.AppPort != "" {
+		addr = ":" + cfg.AppPort
+	}
+
+	log.Printf("Server running at %s\n", addr)
+	if err := http.ListenAndServe(addr, r); err != nil {
+		log.Fatalf("could not start server: %v", err)
+	}
 }
