@@ -11,5 +11,7 @@ type UserReponsitory interface {
 	GetUserV2(ctx context.Context, id string) *domain.User
 	//Find(id string) *domain.User
 	Find(id string) *domain.User
-	CreateUser(ctx context.Context, user domain.User) *domain.User
+	CreateUser(ctx context.Context, user *domain.User) *domain.User
+	Register(ctx context.Context, email, password string) *domain.User
+	GetUserByEmail(ctx context.Context, email string) *domain.User
 }
